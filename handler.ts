@@ -8,6 +8,26 @@ import { User } from './services/model/user';
 AWS.config.update({region: 'us-east-1'});
 const dynamoDB : DynamoDB.DocumentClient = new DynamoDB.DocumentClient({region: 'us-east-1'});
 
+export const listUsers: APIGatewayProxyHandler = async (_event, _context) => {
+  _context.callbackWaitsForEmptyEventLoop = false;
+
+  try {
+    const userService: UserService = new UserService( dynamoDB );
+    const result: User[] = await userService.listUsers();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    }; 
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({error: error.message}),
+    }
+  }
+}
+
+
 export const createUser: APIGatewayProxyHandler = async (event, _context) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
@@ -32,7 +52,7 @@ export const getUser: APIGatewayProxyHandler = async (event, _context) => {
   
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User = await userService.getUser( event.pathParameters.id );
+    const result: User = await userService.getUser( event.pathParameters.email );
 
     return {
       statusCode: 200,
@@ -51,7 +71,7 @@ export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User = await userService.updateUser( event.pathParameters.id, new User( JSON.parse(event.body) ) );
+    const result: User = await userService.updateUser( event.pathParameters.email, new User( JSON.parse(event.body) ) );
     return {
       statusCode: 200,
       body: JSON.stringify(result),
@@ -69,7 +89,7 @@ export const deleteUser: APIGatewayProxyHandler = async (event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: DynamoDB.DocumentClient.DeleteItemOutput = await userService.deleteUser( event.pathParameters.id );
+    const result: DynamoDB.DocumentClient.DeleteItemOutput = await userService.deleteUser( event.pathParameters.email );
     return {
       statusCode: 200,
       body: JSON.stringify(result),
