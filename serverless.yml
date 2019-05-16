@@ -53,11 +53,17 @@ functions:
           path: /
           cors: true
           documentation:
-            summary: "Create user request"
-            description: "Create user request"
+            summary: "Create user"
+            description: "Create new user"
             tags:
               - User
-            requestModels: CreateUserRequest
+            requestModels:
+              "application/json": CreateUserRequest
+            methodResponses:
+              - statusCode: 200
+                responseModels:
+                  "application/json" : CreateUserRequest
+              - statusCode: 400
           reqValidatorName: onlyBody # reference and use the 'only-body' request validator
   update-user:
     handler: handler.updateUser
