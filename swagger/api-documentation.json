@@ -1,0 +1,267 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Orange Theory API, for User Managnment demo",
+      "version": "2019-05-16T20:01:06Z",
+      "title": "dev-user-api-service"
+    },
+    "host": "orangetheory.api.kevinmorland.com",
+    "basePath": "/user",
+    "tags": [
+      {
+        "name": "User",
+        "description": "User Management"
+      }
+    ],
+    "schemes": [
+      "https"
+    ],
+    "paths": {
+      "/": {
+        "get": {
+          "responses": {}
+        },
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Create user",
+          "description": "Create new user",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "CreateUserRequest",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateUserRequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "200 response",
+              "schema": {
+                "$ref": "#/definitions/CreateUserRequest"
+              }
+            },
+            "400": {
+              "description": "400 response"
+            }
+          }
+        },
+        "options": {
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "200 response",
+              "headers": {
+                "Access-Control-Allow-Origin": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Methods": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Credentials": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Headers": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/{email}": {
+        "get": {
+          "responses": {}
+        },
+        "put": {
+          "responses": {}
+        },
+        "delete": {
+          "responses": {}
+        },
+        "options": {
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "200 response",
+              "headers": {
+                "Access-Control-Allow-Origin": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Methods": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Credentials": {
+                  "type": "string"
+                },
+                "Access-Control-Allow-Headers": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "CreateUserRequestName": {
+        "type": "object",
+        "required": [
+          "first",
+          "last"
+        ],
+        "properties": {
+          "last": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUserRequestDob": {
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "nat": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "dob": {
+            "$ref": "#/definitions/CreateUserRequestDob"
+          },
+          "name": {
+            "$ref": "#/definitions/CreateUserRequestName"
+          },
+          "registered": {
+            "$ref": "#/definitions/CreateUserRequestRegistered"
+          },
+          "location": {
+            "$ref": "#/definitions/CreateUserRequestLocation"
+          },
+          "cell": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "picture": {
+            "$ref": "#/definitions/CreateUserRequestPicture"
+          }
+        }
+      },
+      "CreateUserRequestLocation": {
+        "type": "object",
+        "required": [
+          "city",
+          "postcode",
+          "state",
+          "street"
+        ],
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "object",
+            "properties": {
+              "offset": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "postcode": {
+            "type": "number"
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "string"
+              },
+              "longitude": {
+                "type": "string"
+              }
+            }
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUserRequestPicture": {
+        "type": "object",
+        "properties": {
+          "thumbnail": {
+            "type": "string"
+          },
+          "large": {
+            "type": "string"
+          },
+          "medium": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUserRequestRegistered": {
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
