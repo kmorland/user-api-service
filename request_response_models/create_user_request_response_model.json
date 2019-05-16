@@ -1,0 +1,76 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "name": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "first": { "type": "string" },
+                "last": { "type": "string" }
+            },
+            "required": ["first", "last"]
+        },
+        "dob": {
+            "type": "object",
+            "properties": {
+                "date": { "type": "string" },
+                "age": { "type": "string" }
+            },
+            "required": ["date"]
+        },
+        "registered": {
+            "type": "object",
+            "properties": {
+                "date": { "type": "string" },
+                "age": { "type": "string" }
+            },
+            "required": ["date"]
+        },
+        "picture": {
+            "type": "object",
+            "properties": {
+                "large": { "type": "string" },
+                "medium": { "type": "string" },
+                "thumbnail": { "type": "string" }
+            }
+        },
+        "location": {
+            "type": "object",
+            "properties": {
+                "street": { "type": "string" },
+                "city": { "type": "string" },
+                "state": { "type": "string" },
+                "postcode": { "type": "number" },
+                "coordinates": {
+                    "type": "object",
+                    "properties": {
+                        "latitude": { "type": "string" },
+                        "longitude": { "type": "string" }
+                    }
+                },
+                "timezone": {
+                    "type": "object",
+                    "properties": {
+                        "offset": { "type": "string" },
+                        "description": { "type": "string" }
+                    }
+                }
+            },
+            "required": ["street", "city", "state", "postcode"]
+        }
+    },
+  
+    "type": "object",
+    "properties": {
+        "gender": { "type": "string" },
+        "email": { "type": "string" },
+        "cell": { "type": "string" },
+        "phone": { "type": "string" },
+        "nat": { "type": "string" },
+        "name": { "$ref": "#/definitions/name" },
+        "dob": { "$ref": "#/definitions/dob" },
+        "registered": { "$ref": "#/definitions/registered" },
+        "picture": { "$ref": "#/definitions/picture" },
+        "location": { "$ref": "#/definitions/location" }
+    }
+  }
