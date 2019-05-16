@@ -8,11 +8,71 @@ plugins:
 provider:
   name: aws
   runtime: nodejs8.10
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
-  hello:
-    handler: handler.hello
+  list-users:
+    handler: handler.listUsers
     events:
       - http:
           method: get
-          path: hello
+          path: /
+          cors: true
+  create-user:
+    handler: handler.createUser
+    events:
+      - http:
+          method: post
+          path: /
+          cors: true
+  update-user:
+    handler: handler.updateUser
+    events:
+      - http:
+          method: put
+          path: /{email}
+          cors: true
+  get-user:
+    handler: handler.getUser
+    events:
+      - http:
+          method: get
+          path: /{email}
+          cors: true
+  delete-user:
+    handler: handler.deleteUser
+    events:
+      - http:
+          method: delete
+          path: /{email}
+          cors: true
+
+resources:
+  Resources:
+    UserDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: email
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
