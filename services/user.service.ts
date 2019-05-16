@@ -94,7 +94,6 @@ export class UserService {
             await this.db.update(params).promise();
             return await this.getUser(pEmail);
         } catch (error) {
-            console.log('update error', error);
             throw new Error(error);
         }
     }
