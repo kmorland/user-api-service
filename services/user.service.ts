@@ -100,20 +100,18 @@ export class UserService {
                 ":dob": pUser.dob,
                 ":location": pUser.location,
                 ":updatedDate": new Date().toJSON(),
+                ":email" : pEmail,
             },
             ExpressionAttributeNames: {
                 "#name": "name",
                 "#location": "location",
             },
-            ReturnValues: "UPDATED_NEW",
+            ConditionExpression: 'email = :email',
+            ReturnValues: "ALL_NEW",
         };
 
         try {
-
-            const updatedUser: DynamoDB.DocumentClient.UpdateItemOutput = await this.db.update(params).promise();
-            if (!updatedUser.Attributes) {
-                throw { message: `User was not found with given email address ${pEmail}`, errorCode: 404 };
-            }
+            await this.db.update(params).promise();
             return await this.getUser(pEmail);
         } catch (error) {
             throw new Error(error);
