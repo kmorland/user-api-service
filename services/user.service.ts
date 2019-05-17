@@ -1,6 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
 import { GetItemOutput } from 'aws-sdk/clients/dynamodb';
-import { User } from './model/user';
 
 export class UserService {
 
@@ -10,18 +9,14 @@ export class UserService {
         this.db = dbClient;
     }
 
-    async listUsers(): Promise<User[]> {
+    async listUsers(): Promise<DynamoDB.DocumentClient.ScanOutput> {
         const params: DynamoDB.DocumentClient.ScanInput = {
             TableName: process.env.DYNAMODB_TABLE
         };
-        const result: DynamoDB.DocumentClient.ScanOutput = await this.db.scan(params).promise();
-        const users: User[] = result.Items.map( (u:any) => {
-            return new User(u);
-        });
-        return users;
+        return await this.db.scan(params).promise();
     }
 
-    async createUser( user: User ): Promise<User> {
+    async createUser( user: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         user.creationDate = new Date().toJSON();
         const params: DynamoDB.DocumentClient.PutItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -45,7 +40,7 @@ export class UserService {
         }        
     }
 
-    async getUser( pEmail: string ): Promise<User> {
+    async getUser( pEmail: string ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         const params: DynamoDB.DocumentClient.GetItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: {email: pEmail}
@@ -54,15 +49,15 @@ export class UserService {
         try {
             const data: GetItemOutput =  await this.db.get(params).promise();
             if( !data && !data.Item ) {
-                throw new Error(`User was not found with given email address ${pEmail}`);
+                throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
-            return new User(data.Item);
+            return data;
         } catch (error) {
             throw new Error(error);
         }
     }
 
-    async updateUser( pEmail: string, pUser: User ): Promise<User> {
+    async updateUser( pEmail: string, pUser: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         const params: DynamoDB.DocumentClient.UpdateItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: {email: pEmail},

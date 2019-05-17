@@ -13,11 +13,11 @@ export const listUsers: APIGatewayProxyHandler = async (_event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User[] = await userService.listUsers();
+    const result: DynamoDB.DocumentClient.ScanOutput = await userService.listUsers();
 
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(result.Items),
     }; 
   } catch (error) {
     return {
@@ -33,11 +33,11 @@ export const createUser: APIGatewayProxyHandler = async (event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User = await userService.createUser( new User( JSON.parse(event.body) ) );
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.createUser( JSON.parse(event.body) );
 
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(result.Item),
     }; 
   } catch (error) {
     return {
@@ -52,15 +52,15 @@ export const getUser: APIGatewayProxyHandler = async (event, _context) => {
   
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User = await userService.getUser( event.pathParameters.email );
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.getUser( event.pathParameters.email );
 
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(result.Item),
     };  
   } catch (error) {
     return {
-      statusCode: 400,
+      statusCode: error.erroCode || 400,
       body: JSON.stringify({error: error.message}),
     }
   }
@@ -71,10 +71,10 @@ export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: User = await userService.updateUser( event.pathParameters.email, new User( JSON.parse(event.body) ) );
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser( event.pathParameters.email, new User( JSON.parse(event.body) ) );
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(result.Item),
     };
   } catch (error) {
     return {
