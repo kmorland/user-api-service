@@ -112,7 +112,7 @@ export class UserService {
             
             const updatedUser: DynamoDB.DocumentClient.UpdateItemOutput = await this.db.update(params).promise();
             if( !updatedUser.Attributes ) {
-                throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
+                throw { message: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
             return await this.getUser(pEmail);
         } catch (error) {
