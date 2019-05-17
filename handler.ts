@@ -82,7 +82,7 @@ export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
 
   try {
     const userService: UserService = new UserService( dynamoDB );
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser( event.pathParameters.email, new User( JSON.parse(event.body) ) );
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser( event.pathParameters.email, JSON.parse(event.body) );
     return {
       statusCode: 200,
       headers: HEADERS,
