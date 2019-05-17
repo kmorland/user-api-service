@@ -1,9 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import 'source-map-support/register';
-import { UserService } from './services/user.service';
 import { DynamoDB } from 'aws-sdk';
-import * as AWS from 'aws-sdk';
+
 import { User } from './services/model/user';
+import { UserService } from './services/user.service';
+
+import * as AWS from 'aws-sdk';
+
+import 'source-map-support/register';
 
 const HEADERS = {
   "Access-Control-Allow-Credentials": true,
