@@ -1,28 +1,26 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context, Callback, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import { UserService } from './services/user.service';
-import { DynamoDB } from 'aws-sdk';
-import * as AWS from 'aws-sdk';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 const HEADERS = {
   "Access-Control-Allow-Credentials": true,
   "Access-Control-Allow-Origin": "*",
 };
 
-AWS.config.update({ region: 'us-east-1' });
-const dynamoDB: DynamoDB.DocumentClient = new DynamoDB.DocumentClient({ region: 'us-east-1' });
+const dynamoDB: DocumentClient = new DocumentClient({ region: 'us-east-1' });
 
 export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.ScanOutput = await userService.listUsers();
+    const {Items} = await userService.listUsers();
 
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify(result.Items),
+      body: JSON.stringify(Items),
     };
   } catch (error) {
     return {
@@ -38,12 +36,12 @@ export const createUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.createUser(JSON.parse(_event.body));
+    const {Item} = await userService.createUser(JSON.parse(_event.body));
 
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(Item),
     };
   } catch (error) {
     return {
@@ -59,12 +57,12 @@ export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEve
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.getUser(_event.pathParameters.email);
+    const {Item} = await userService.getUser(_event.pathParameters.email);
 
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(Item),
     };
   } catch (error) {
     return {
@@ -80,11 +78,11 @@ export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser(_event.pathParameters.email, JSON.parse(_event.body));
+    const {Item} = await userService.updateUser(_event.pathParameters.email, JSON.parse(_event.body));
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(Item),
     };
   } catch (error) {
     return {
@@ -100,11 +98,11 @@ export const deleteUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.DeleteItemOutput = await userService.deleteUser(_event.pathParameters.email);
+    await userService.deleteUser(_event.pathParameters.email);
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify(result),
+      body: null,
     };
   } catch (error) {
     return {
