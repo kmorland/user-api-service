@@ -3,7 +3,6 @@ import 'source-map-support/register';
 import { UserService } from './services/user.service';
 import { DynamoDB } from 'aws-sdk';
 import * as AWS from 'aws-sdk';
-import { User } from './services/model/user';
 
 AWS.config.update({region: 'us-east-1'});
 const dynamoDB : DynamoDB.DocumentClient = new DynamoDB.DocumentClient({region: 'us-east-1'});
@@ -60,7 +59,7 @@ export const getUser: APIGatewayProxyHandler = async (event, _context) => {
     };  
   } catch (error) {
     return {
-      statusCode: error.erroCode || 400,
+      statusCode: error.errorCode || 400,
       body: JSON.stringify({error: error.message}),
     }
   }
