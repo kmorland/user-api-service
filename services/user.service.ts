@@ -63,7 +63,7 @@ export class UserService {
         };
 
         try {
-            const data: GetItemOutput =  await this.db.get(params).promise();
+            const data: DynamoDB.DocumentClient.GetItemOutput = await this.db.get(params).promise();
             if( !data && !data.Item ) {
                 throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
@@ -109,7 +109,11 @@ export class UserService {
         };
 
         try {
-            await this.db.update(params).promise();
+            
+            const updatedUser: DynamoDB.DocumentClient.UpdateItemOutput =await this.db.update(params).promise();
+            if( !updatedUser.Attributes ) {
+                throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
+            }
             return await this.getUser(pEmail);
         } catch (error) {
             throw new Error(error);
