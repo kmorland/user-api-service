@@ -1,4 +1,4 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context, Callback, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import { UserService } from './services/user.service';
 import { DynamoDB } from 'aws-sdk';
@@ -9,11 +9,10 @@ const HEADERS = {
   "Access-Control-Allow-Origin": "*",
 };
 
-
 AWS.config.update({ region: 'us-east-1' });
 const dynamoDB: DynamoDB.DocumentClient = new DynamoDB.DocumentClient({ region: 'us-east-1' });
 
-export const listUsers: APIGatewayProxyHandler = async (_event, _context) => {
+export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
@@ -34,13 +33,12 @@ export const listUsers: APIGatewayProxyHandler = async (_event, _context) => {
   }
 }
 
-
-export const createUser: APIGatewayProxyHandler = async (event, _context) => {
+export const createUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.createUser(JSON.parse(event.body));
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.createUser(JSON.parse(_event.body));
 
     return {
       statusCode: 200,
@@ -56,12 +54,12 @@ export const createUser: APIGatewayProxyHandler = async (event, _context) => {
   }
 }
 
-export const getUser: APIGatewayProxyHandler = async (event, _context) => {
+export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.getUser(event.pathParameters.email);
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.getUser(_event.pathParameters.email);
 
     return {
       statusCode: 200,
@@ -77,12 +75,12 @@ export const getUser: APIGatewayProxyHandler = async (event, _context) => {
   }
 }
 
-export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
+export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser(event.pathParameters.email, JSON.parse(event.body));
+    const result: DynamoDB.DocumentClient.GetItemOutput = await userService.updateUser(_event.pathParameters.email, JSON.parse(_event.body));
     return {
       statusCode: 200,
       headers: HEADERS,
@@ -97,12 +95,12 @@ export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
   }
 }
 
-export const deleteUser: APIGatewayProxyHandler = async (event, _context) => {
+export const deleteUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
     const userService: UserService = new UserService(dynamoDB);
-    const result: DynamoDB.DocumentClient.DeleteItemOutput = await userService.deleteUser(event.pathParameters.email);
+    const result: DynamoDB.DocumentClient.DeleteItemOutput = await userService.deleteUser(_event.pathParameters.email);
     return {
       statusCode: 200,
       headers: HEADERS,
