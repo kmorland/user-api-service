@@ -1,4 +1,3 @@
-import { DynamoDB } from "aws-sdk";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 export class UserService {
@@ -130,6 +129,10 @@ export class UserService {
             Key: {
                 email: pEmail,
             },
+            ExpressionAttributeValues: {
+                ":email" : pEmail
+            },
+            ConditionExpression: "email = :email",
             ReturnValues: "NONE",
         };
         try {
