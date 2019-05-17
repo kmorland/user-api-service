@@ -64,12 +64,12 @@ export class UserService {
 
         try {
             const data: GetItemOutput =  await this.db.get(params).promise();
-            if( !data && !data.Item ) {
+            if( !data || !data.Item ) {
                 throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
             return data;
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
