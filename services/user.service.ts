@@ -1,21 +1,21 @@
 import { DynamoDB } from 'aws-sdk';
-import { GetItemOutput } from 'aws-sdk/clients/dynamodb';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 export class UserService {
 
-    private db: DynamoDB.DocumentClient;
+    private db: DocumentClient;
 
-    constructor(dbClient: DynamoDB.DocumentClient) {
+    constructor(dbClient: DocumentClient) {
         this.db = dbClient;
     }
 
     /**
      * List of users, queries DynamoDB
-     * @returns {Promise<DynamoDB.DocumentClient.ScanOutput>} array of users
+     * @returns {Promise<ScanOutput>} array of users
      * @author Kevin Morland
      */
-    async listUsers(): Promise<DynamoDB.DocumentClient.ScanOutput> {
-        const params: DynamoDB.DocumentClient.ScanInput = {
+    async listUsers(): Promise<DocumentClient.ScanOutput> {
+        const params: DocumentClient.ScanInput = {
             TableName: process.env.DYNAMODB_TABLE
         };
         return await this.db.scan(params).promise();
@@ -24,22 +24,22 @@ export class UserService {
     /**
      * Creates user, from post request
      * @param {any} user
-     * @returns {Promise<DynamoDB.DocumentClient.GetItemOutput>} created user
+     * @returns {Promise<GetItemOutput>} created user
      * @author Kevin Morland
      */
-    async createUser( user: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
+    async createUser( user: any ): Promise<DocumentClient.GetItemOutput> {
         user.creationDate = new Date().toJSON();
-        const params: DynamoDB.DocumentClient.PutItemInput = {
+        const params: DocumentClient.PutItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Item: user,
         };
 
         try {
-            const userCheckParams: DynamoDB.DocumentClient.GetItemInput = {
+            const userCheckParams: DocumentClient.GetItemInput = {
                 TableName: process.env.DYNAMODB_TABLE,
                 Key: {email : user.email}
             }
-            const userCheck: GetItemOutput = await this.db.get(userCheckParams).promise();
+            const userCheck: DocumentClient.GetItemOutput = await this.db.get(userCheckParams).promise();
             if( userCheck && userCheck.Item ) {
                 throw new Error(`User already exists, with email ${user.email}`);
             }
@@ -53,23 +53,23 @@ export class UserService {
     
     /**
      *  Returns the user by the key, which is the email field
-     *  @returns {Promise<DynamoDB.DocumentClient.GetItemOutput>} user by email address
+     *  @returns {Promise<GetItemOutput>} user by email address
      *  @author Kevin Morland
      */
-    async getUser( pEmail: string ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
-        const params: DynamoDB.DocumentClient.GetItemInput = {
+    async getUser( pEmail: string ): Promise<DocumentClient.GetItemOutput> {
+        const params: DocumentClient.GetItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: {email: pEmail}
         };
 
         try {
-            const data: DynamoDB.DocumentClient.GetItemOutput = await this.db.get(params).promise();
-            if( !data && !data.Item ) {
+            const data: DocumentClient.GetItemOutput =  await this.db.get(params).promise();
+            if( !data || !data.Item ) {
                 throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
             return data;
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -77,11 +77,11 @@ export class UserService {
      * Updates the user, from the PUT body
      * @param {string} pEmail 
      * @param {string} pUser
-     * @returns  {Promise<DynamoDB.DocumentClient.GetItemOutput>} Returns the updated user
+     * @returns  {Promise<DocumentClient.GetItemOutput>} Returns the updated user
      * @author Kevin Morland
      */
-    async updateUser( pEmail: string, pUser: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
-        const params: DynamoDB.DocumentClient.UpdateItemInput = {
+    async updateUser( pEmail: string, pUser: any ): Promise<DocumentClient.GetItemOutput> {
+        const params: DocumentClient.UpdateItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: {email: pEmail},
             UpdateExpression: `SET 
@@ -110,7 +110,7 @@ export class UserService {
 
         try {
             
-            const updatedUser: DynamoDB.DocumentClient.UpdateItemOutput =await this.db.update(params).promise();
+            const updatedUser: DynamoDB.DocumentClient.UpdateItemOutput = await this.db.update(params).promise();
             if( !updatedUser.Attributes ) {
                 throw { errorMessage: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
@@ -123,11 +123,11 @@ export class UserService {
     /**
      * Deletes the user from the dynamodb table, by key
      * @param {string} pEmail
-     * @returns {Promise<DynamoDB.DocumentClient.DeleteItemOutput>}
+     * @returns {Promise<DocumentClient.DeleteItemOutput>}
      * @author Kevin Morland 
      */
-    async deleteUser (pEmail: string): Promise<DynamoDB.DocumentClient.DeleteItemOutput> {
-        const params: DynamoDB.DocumentClient.DeleteItemInput = {
+    async deleteUser (pEmail: string): Promise<DocumentClient.DeleteItemOutput> {
+        const params: DocumentClient.DeleteItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: {
                 email: pEmail

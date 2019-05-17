@@ -4,7 +4,8 @@
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "listUsers": "sls invoke local -f list-users --aws-profile kevinmorland.com",
+    "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com"
   },
   "dependencies": {
     "aws-sdk": "^2.456.0",
