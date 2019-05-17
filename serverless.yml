@@ -44,14 +44,14 @@ functions:
     events:
       - http:
           method: get
-          path: /
+          path: /user
           cors: true
   create-user:
     handler: handler.createUser
     events:
       - http:
           method: post
-          path: /
+          path: /user
           cors: true
           documentation:
             summary: "Create user"
@@ -71,21 +71,21 @@ functions:
     events:
       - http:
           method: put
-          path: /{email}
+          path: /user/{email}
           cors: true
   get-user:
     handler: handler.getUser
     events:
       - http:
           method: get
-          path: /{email}
+          path: /user/{email}
           cors: true
   delete-user:
     handler: handler.deleteUser
     events:
       - http:
           method: delete
-          path: /{email}
+          path: /user/{email}
           cors: true
 
 resources:

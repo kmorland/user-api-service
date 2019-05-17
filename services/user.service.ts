@@ -9,6 +9,11 @@ export class UserService {
         this.db = dbClient;
     }
 
+    /**
+     * List of users, queries DynamoDB
+     * @returns {Promise<DynamoDB.DocumentClient.ScanOutput>} array of users
+     * @author Kevin Morland
+     */
     async listUsers(): Promise<DynamoDB.DocumentClient.ScanOutput> {
         const params: DynamoDB.DocumentClient.ScanInput = {
             TableName: process.env.DYNAMODB_TABLE
@@ -16,6 +21,12 @@ export class UserService {
         return await this.db.scan(params).promise();
     }
 
+    /**
+     * Creates user, from post request
+     * @param {any} user
+     * @returns {Promise<DynamoDB.DocumentClient.GetItemOutput>} created user
+     * @author Kevin Morland
+     */
     async createUser( user: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         user.creationDate = new Date().toJSON();
         const params: DynamoDB.DocumentClient.PutItemInput = {
@@ -39,7 +50,12 @@ export class UserService {
             throw new Error(error);
         }        
     }
-
+    
+    /**
+     *  Returns the user by the key, which is the email field
+     *  @returns {Promise<DynamoDB.DocumentClient.GetItemOutput>} user by email address
+     *  @author Kevin Morland
+     */
     async getUser( pEmail: string ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         const params: DynamoDB.DocumentClient.GetItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -57,6 +73,13 @@ export class UserService {
         }
     }
 
+    /**
+     * Updates the user, from the PUT body
+     * @param {string} pEmail 
+     * @param {string} pUser
+     * @returns  {Promise<DynamoDB.DocumentClient.GetItemOutput>} Returns the updated user
+     * @author Kevin Morland
+     */
     async updateUser( pEmail: string, pUser: any ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
         const params: DynamoDB.DocumentClient.UpdateItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -93,6 +116,12 @@ export class UserService {
         }
     }
 
+    /**
+     * Deletes the user from the dynamodb table, by key
+     * @param {string} pEmail
+     * @returns {Promise<DynamoDB.DocumentClient.DeleteItemOutput>}
+     * @author Kevin Morland 
+     */
     async deleteUser (pEmail: string): Promise<DynamoDB.DocumentClient.DeleteItemOutput> {
         const params: DynamoDB.DocumentClient.DeleteItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
