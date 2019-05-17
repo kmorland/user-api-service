@@ -72,7 +72,7 @@ export const getUser: APIGatewayProxyHandler = async (event, _context) => {
     return {
       statusCode: error.errorCode || 400,
       headers: HEADERS,
-      body: JSON.stringify({ error: error.errorMessage }),
+      body: JSON.stringify({ error: error.message }),
     }
   }
 }
