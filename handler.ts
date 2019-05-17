@@ -90,7 +90,7 @@ export const updateUser: APIGatewayProxyHandler = async (event, _context) => {
     };
   } catch (error) {
     return {
-      statusCode: 400,
+      statusCode: error.errorCode || 400,
       headers: HEADERS,
       body: JSON.stringify({ error: error.message }),
     };
