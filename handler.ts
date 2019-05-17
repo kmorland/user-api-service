@@ -1,16 +1,13 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, Context, Callback, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import { UserService } from './services/user.service';
-import { DynamoDB } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import * as AWS from 'aws-sdk';
 
 const HEADERS = {
   "Access-Control-Allow-Credentials": true,
   "Access-Control-Allow-Origin": "*",
 };
 
-AWS.config.update({ region: 'us-east-1' });
 const dynamoDB: DocumentClient = new DocumentClient({ region: 'us-east-1' });
 
 export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
