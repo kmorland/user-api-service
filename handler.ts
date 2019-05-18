@@ -1,15 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callback, Context } from "aws-lambda";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { UserService } from "./services/user.service";
-import * as Joi from "@hapi/joi";
 import { ValidateService } from "./services/validate.service";
+import { ResponseService } from "./services/response.service";
 
 import "source-map-support/register";
-
-const HEADERS = {
-  "Access-Control-Allow-Credentials": true,
-  "Access-Control-Allow-Origin": "*",
-};
 
 const dynamoDB: DocumentClient = new DocumentClient({ region: "us-east-1" });
 
@@ -20,17 +15,9 @@ export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyE
     const userService: UserService = new UserService(dynamoDB);
     const { Items } = await userService.listUsers();
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify(Items),
-    };
+    return ResponseService.successResponse(Items);
   } catch (error) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return ResponseService.errorResponse(error);
   }
 };
 
@@ -41,17 +28,9 @@ export const createUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
     const userService: UserService = new UserService(dynamoDB);
     const { Item } = await userService.createUser(JSON.parse(_event.body));
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify(Item),
-    };
+    return ResponseService.successResponse(Item);
   } catch (error) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return ResponseService.errorResponse(error);
   }
 };
 
@@ -59,28 +38,16 @@ export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEve
   _context.callbackWaitsForEmptyEventLoop = false;
 
   if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
-    };
+    return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
   try {
     const userService: UserService = new UserService(dynamoDB);
     const { Item } = await userService.getUser(_event.pathParameters.email);
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify(Item),
-    };
+    return ResponseService.successResponse(Item);
   } catch (error) {
-    return {
-      statusCode: error.errorCode || 400,
-      headers: HEADERS,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return ResponseService.errorResponse(error);
   }
 };
 
@@ -88,27 +55,15 @@ export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
   _context.callbackWaitsForEmptyEventLoop = false;
 
   if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
-    };
+    return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
   try {
     const userService: UserService = new UserService(dynamoDB);
     const { Item } = await userService.updateUser(_event.pathParameters.email, JSON.parse(_event.body));
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify(Item),
-    };
+    return ResponseService.successResponse(Item);
   } catch (error) {
-    return {
-      statusCode: error.errorCode || 400,
-      headers: HEADERS,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return ResponseService.errorResponse(error);
   }
 };
 
@@ -116,26 +71,14 @@ export const deleteUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
   _context.callbackWaitsForEmptyEventLoop = false;
 
   if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
-    };
+    return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
   try {
     const userService: UserService = new UserService(dynamoDB);
     await userService.deleteUser(_event.pathParameters.email);
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: null,
-    };
+    return ResponseService.successResponse();
   } catch (error) {
-    return {
-      statusCode: 400,
-      headers: HEADERS,
-      body: JSON.stringify({ error: error.message }),
-    };
+    return ResponseService.errorResponse(error);
   }
 };
