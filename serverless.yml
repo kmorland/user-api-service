@@ -73,6 +73,18 @@ functions:
           method: put
           path: /user/{email}
           cors: true
+          documentation:
+            summary: "Update user"
+            description: "Udpate existing user, by email address"
+            tags:
+              - User
+            requestModels:
+              "application/json": CreateUserRequest
+            methodResponses:
+              - statusCode: 200
+                responseModels:
+                  "application/json" : CreateUserRequest
+              - statusCode: 400
   get-user:
     handler: handler.getUser
     events:
@@ -80,6 +92,16 @@ functions:
           method: get
           path: /user/{email}
           cors: true
+          documentation:
+            summary: "Retrieve user"
+            description: "Retrieve existing user, by email address"
+            tags:
+              - User
+            methodResponses:
+              - statusCode: 200
+                responseModels:
+                  "application/json" : CreateUserRequest
+              - statusCode: 400
   delete-user:
     handler: handler.deleteUser
     events:
@@ -87,7 +109,11 @@ functions:
           method: delete
           path: /user/{email}
           cors: true
-
+          documentation:
+            summary: "Deletes user by email address"
+            description: "Deletes user by email address, which is the key"
+            tags:
+              - User
 resources:
   Resources:
     UserDynamoDbTable:

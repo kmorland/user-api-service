@@ -8,6 +8,8 @@
     "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com"
   },
   "dependencies": {
+    "@hapi/joi": "^15.0.3",
+    "@types/joi": "^14.3.3",
     "aws-sdk": "^2.456.0",
     "serverless-aws-documentation": "^1.1.0",
     "serverless-reqvalidator-plugin": "^1.0.3",

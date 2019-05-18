@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callback, Context } from "aws-lambda";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { UserService } from "./services/user.service";
+import * as Joi from "@hapi/joi";
+import { ValidateService } from "./services/validate.service";
 
 import "source-map-support/register";
 
@@ -56,6 +58,14 @@ export const createUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
+  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+    return {
+      statusCode: 400,
+      headers: HEADERS,
+      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
+    };
+  }
+
   try {
     const userService: UserService = new UserService(dynamoDB);
     const { Item } = await userService.getUser(_event.pathParameters.email);
@@ -77,6 +87,14 @@ export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEve
 export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
+  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+    return {
+      statusCode: 400,
+      headers: HEADERS,
+      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
+    };
+  }
+
   try {
     const userService: UserService = new UserService(dynamoDB);
     const { Item } = await userService.updateUser(_event.pathParameters.email, JSON.parse(_event.body));
@@ -96,6 +114,14 @@ export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 
 export const deleteUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
+
+  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+    return {
+      statusCode: 400,
+      headers: HEADERS,
+      body: JSON.stringify({errorMessage : "Email address required, invalid email address"}),
+    };
+  }
 
   try {
     const userService: UserService = new UserService(dynamoDB);
