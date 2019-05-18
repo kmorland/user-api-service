@@ -105,7 +105,7 @@ export class UserService {
                 "#name": "name",
                 "#location": "location",
             },
-            ConditionExpression: 'email = :email',
+            ConditionExpression: "email = :email",
             ReturnValues: "ALL_NEW",
         };
 
@@ -130,7 +130,7 @@ export class UserService {
                 email: pEmail,
             },
             ExpressionAttributeValues: {
-                ":email" : pEmail
+                ":email" : pEmail,
             },
             ConditionExpression: "email = :email",
             ReturnValues: "NONE",
