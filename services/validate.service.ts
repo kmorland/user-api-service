@@ -7,7 +7,7 @@ export class ValidateService {
         return (error) ? false : true;
     }
 
-    static isValidUser() {
+    public static isValidUser(userData: any) {
         const schema = Joi.object().keys({
             email: Joi.string().email().required(),
             phone: Joi.string().required(),
@@ -21,10 +21,10 @@ export class ValidateService {
             }),
             dob: Joi.object().keys({
                 date: Joi.string.date().required(),
-                age: Joi.number()
+                age: Joi.number(),
             }),
-            
         });
+        Joi.validate(userData, schema);
     }
 
 }
