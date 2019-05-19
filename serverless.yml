@@ -6,8 +6,7 @@ plugins:
   - serverless-webpack
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
-  - serverless-jest-plugin
-
+  
 provider:
   name: aws
   runtime: nodejs8.10
