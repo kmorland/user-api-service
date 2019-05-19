@@ -1,6 +1,7 @@
-import createEvent from "aws-event-mocks";
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 import { listUsers } from "../handler";
+
+import createEvent from "aws-event-mocks";
 
 const mockContext = {} as Context;
 const mockCallback = {} as Callback;
