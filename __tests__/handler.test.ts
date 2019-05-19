@@ -1,22 +1,19 @@
-// import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
-import { Context } from "aws-lambda";
-import {} from "jest";
-//import eventStub from "./stubs/list-user-event.json";
+import createEvent from "aws-event-mocks";
+import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 import { listUsers } from "../handler";
 
-const mockEvent = {} as APIGatewayProxyEvent;
 const mockContext = {} as Context;
 const mockCallback = {} as Callback;
 
+jest.setTimeout(120000);
+
 describe("User API Tests", () => {
     test("listUsers should return HTTP Status 200", async () => {
-        // const response = listUsers(mockEvent, mockContext, mockCallback);
-        // expect(response.statusCode).toBe(200);
-        //const event: APIGatewayProxyEvent = eventStub;
-        const context = {};
-        const result = await listUsers(null, context as Context, null);
-        console.log("result", result);
-        expect(result).toMatchSnapshot();
-        expect(listUsers).toBeTruthy();
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+        });
+
+        const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
+        expect(response.statusCode).toBe(200);
     });
 });
