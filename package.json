@@ -4,6 +4,7 @@
   "description": "Orange Theory API, for User Managnment demo",
   "main": "handler.js",
   "scripts": {
+    "test": "jest --detectOpenHandles",
     "listUsers": "sls invoke local -f list-users --aws-profile kevinmorland.com",
     "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com"
   },
@@ -20,7 +21,10 @@
     "@types/jest": "^24.0.13",
     "@types/node": "^10.12.18",
     "aws-lambda-mock-context": "^3.2.1",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0",
     "serverless-webpack": "^5.2.0",
+    "ts-jest": "^24.0.2",
     "ts-loader": "^5.3.3",
     "typescript": "^3.2.4",
     "webpack": "^4.29.0"
