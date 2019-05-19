@@ -14,6 +14,7 @@ module.exports = {
         "json",
         "node"
     ],
+    verbose: true,
     collectCoverage: true,
     coverageReporters: ["text"]
 }
