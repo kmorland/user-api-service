@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
-import { listUsers } from "../handler";
+import { getUser, listUsers } from "../handler";
 
 import createEvent from "aws-event-mocks";
 
@@ -44,6 +44,33 @@ describe("User API Tests", () => {
 
         const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
         expect(response).toMatchSnapshot();
+    });
+
+    test("getUser should return 400, invalid email address", async () => {
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+            merge: {
+                pathParameters: {
+                    email: "kmorland@yahoocom",
+                },
+            },
+        });
+        const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("getUser body should return 'Email address required, invalid email address'", async () => {
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+            merge: {
+                pathParameters: {
+                    email: "kmorland@yahoocom",
+                },
+            },
+        });
+        const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
+        const { error } = JSON.parse(response.body);
+        expect(error).toBe("Email address required, invalid email address");
     });
 
     afterAll(() => {
