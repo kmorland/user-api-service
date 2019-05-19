@@ -1,3 +1,4 @@
+// tslint:disable: no-var-requires
 import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
@@ -5,7 +6,7 @@ import { getUser, listUsers } from "../handler";
 
 import createEvent from "aws-event-mocks";
 
-import getUserResponse from "../data/get-user-response.json";
+const getUserResponse = require("../data/get-user-response.json");
 
 const mockContext = {} as Context;
 const mockCallback = {} as Callback;
