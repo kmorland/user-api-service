@@ -1,11 +1,11 @@
 export class ResponseService {
 
-    static HEADERS = {
+    public static HEADERS = {
         "Access-Control-Allow-Credentials": true,
         "Access-Control-Allow-Origin": "*",
       };
 
-    static successResponse(data?:any) {
+    public static successResponse(data?: any) {
         return {
             statusCode: 200,
             headers: this.HEADERS,
@@ -13,7 +13,7 @@ export class ResponseService {
         };
     }
 
-    static errorResponse(error: any) {
+    public static errorResponse(error: any) {
         return {
             statusCode: error.errorCode || 400,
             headers: this.HEADERS,
