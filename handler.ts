@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callback, Context } from "aws-lambda";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { ResponseService } from "./services/response.service";
 import { UserService } from "./services/user.service";
 import { ValidateService } from "./services/validate.service";
-import { ResponseService } from "./services/response.service";
 
 import "source-map-support/register";
 
@@ -37,7 +37,7 @@ export const createUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+  if ( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
     return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
@@ -54,7 +54,7 @@ export const getUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEve
 export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+  if ( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
     return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
@@ -70,7 +70,7 @@ export const updateUser: APIGatewayProxyHandler = async (_event: APIGatewayProxy
 export const deleteUser: APIGatewayProxyHandler = async (_event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  if( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
+  if ( !ValidateService.isValidEmail(_event.pathParameters.email) ) {
     return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
   }
 
