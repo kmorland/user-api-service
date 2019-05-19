@@ -2,10 +2,10 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 export class UserService {
 
-    private db: DocumentClient;
+    private createdClient: DocumentClient;
 
-    constructor(dbClient: DocumentClient) {
-        this.db = dbClient;
+    constructor() {
+        //
     }
 
     /**
@@ -17,7 +17,7 @@ export class UserService {
         const params: DocumentClient.ScanInput = {
             TableName: process.env.DYNAMODB_TABLE,
         };
-        return await this.db.scan(params).promise();
+        return await this.client().scan(params).promise();
     }
 
     /**
@@ -38,12 +38,12 @@ export class UserService {
                 TableName: process.env.DYNAMODB_TABLE,
                 Key: { email: user.email },
             };
-            const userCheck: DocumentClient.GetItemOutput = await this.db.get(userCheckParams).promise();
+            const userCheck: DocumentClient.GetItemOutput = await this.client().get(userCheckParams).promise();
             if (userCheck && userCheck.Item) {
                 throw new Error(`User already exists, with email ${user.email}`);
             }
 
-            await this.db.put(params).promise();
+            await this.client().put(params).promise();
             return await this.getUser(user.email);
         } catch (error) {
             throw new Error(error);
@@ -62,7 +62,7 @@ export class UserService {
         };
 
         try {
-            const data: DocumentClient.GetItemOutput = await this.db.get(params).promise();
+            const data: DocumentClient.GetItemOutput = await this.client().get(params).promise();
             if (!data || !data.Item) {
                 throw { message: `User was not found with given email address ${pEmail}`, errorCode: 404 };
             }
@@ -110,7 +110,7 @@ export class UserService {
         };
 
         try {
-            await this.db.update(params).promise();
+            await this.client().update(params).promise();
             return await this.getUser(pEmail);
         } catch (error) {
             throw new Error(error);
@@ -136,9 +136,16 @@ export class UserService {
             ReturnValues: "NONE",
         };
         try {
-            return this.db.delete(params).promise();
+            return this.client().delete(params).promise();
         } catch (error) {
             throw new Error(error);
         }
+    }
+
+    private client = () => (this.createdClient || this.createClient());
+    private createClient = () => {
+        // Note: The document client needs to be created in a method so that it can be mocked in the tests
+        this.createdClient = new DocumentClient({ region: "us-east-1" });
+        return this.createdClient;
     }
 }
