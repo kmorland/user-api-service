@@ -37,15 +37,6 @@ describe("User API Tests", () => {
         expect(JSON.parse(response.body)).toHaveLength(1);
     });
 
-    test("listUsers should match snapshot", async () => {
-        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
-            template: "aws:apiGateway",
-        });
-
-        const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
-        expect(response).toMatchSnapshot();
-    });
-
     test("getUser should return 400, invalid email address", async () => {
         const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
             template: "aws:apiGateway",
