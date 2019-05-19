@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User API Tests listUsers should return HTTP Status 200 1`] = `
+Object {
+  "body": "{\\"error\\":\\"Missing required key 'TableName' in params\\"}",
+  "headers": Object {
+    "Access-Control-Allow-Credentials": true,
+    "Access-Control-Allow-Origin": "*",
+  },
+  "statusCode": 400,
+}
+`;

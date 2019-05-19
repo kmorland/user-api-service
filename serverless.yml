@@ -4,7 +4,6 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-  - serverless-reqvalidator-plugin
   - serverless-aws-documentation
   
 provider:
@@ -64,7 +63,6 @@ functions:
                 responseModels:
                   "application/json" : CreateUserRequest
               - statusCode: 400
-          reqValidatorName: onlyBody # reference and use the 'only-body' request validator
   update-user:
     handler: handler.updateUser
     events:
@@ -72,6 +70,9 @@ functions:
           method: put
           path: /user/{email}
           cors: true
+          request:
+            schema:
+              application/json: ${file(request_response_models/create_user_request_response_model.json)} # reference to your model's json schema file. You can also declare the model inline.
           documentation:
             summary: "Update user"
             description: "Udpate existing user, by email address"
@@ -131,11 +132,3 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
-    onlyBody:
-      Type: AWS::ApiGateway::RequestValidator
-      Properties:
-        Name: 'only-body'
-        RestApiId:
-          Ref: ApiGatewayRestApi
-        ValidateRequestBody: true # true or false
-        ValidateRequestParameters: false # true or false

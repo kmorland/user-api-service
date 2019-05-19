@@ -4,6 +4,7 @@
       "es2017"
     ],
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "sourceMap": true,
