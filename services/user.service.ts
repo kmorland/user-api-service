@@ -26,6 +26,7 @@ export class UserService {
      * @returns {Promise<GetItemOutput>} created user
      * @author Kevin Morland
      */
+    /*
     public async createUser(user: any): Promise<DocumentClient.GetItemOutput> {
         user.creationDate = new Date().toJSON();
         const params: DocumentClient.PutItemInput = {
@@ -49,12 +50,13 @@ export class UserService {
             throw new Error(error);
         }
     }
-
+    */
     /**
      *  Returns the user by the key, which is the email field
      *  @returns {Promise<GetItemOutput>} user by email address
      *  @author Kevin Morland
      */
+    /*
     public async getUser(pEmail: string): Promise<DocumentClient.GetItemOutput> {
         const params: DocumentClient.GetItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -71,6 +73,7 @@ export class UserService {
             throw error;
         }
     }
+    */
 
     /**
      * Updates the user, from the PUT body
@@ -79,6 +82,7 @@ export class UserService {
      * @returns  {Promise<DocumentClient.GetItemOutput>} Returns the updated user
      * @author Kevin Morland
      */
+    /*
     public async updateUser(pEmail: string, pUser: any): Promise<DocumentClient.GetItemOutput> {
         const params: DocumentClient.UpdateItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -116,13 +120,14 @@ export class UserService {
             throw new Error(error);
         }
     }
-
+    */
     /**
      * Deletes the user from the dynamodb table, by key
      * @param {string} pEmail
      * @returns {Promise<DocumentClient.DeleteItemOutput>}
      * @author Kevin Morland
      */
+    /*
     public async deleteUser(pEmail: string): Promise<DocumentClient.DeleteItemOutput> {
         const params: DocumentClient.DeleteItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -141,10 +146,9 @@ export class UserService {
             throw new Error(error);
         }
     }
-
+    */
     private client = () => (this.createdClient || this.createClient());
     private createClient = () => {
-        // Note: The document client needs to be created in a method so that it can be mocked in the tests
         this.createdClient = new DocumentClient({ region: "us-east-1" });
         return this.createdClient;
     }

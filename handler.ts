@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callback, Context } from "aws-lambda";
 import { ResponseService } from "./services/response.service";
 import { UserService } from "./services/user.service";
-import { ValidateService } from "./services/validate.service";
+// import { ValidateService } from "./services/validate.service";
 
 import "source-map-support/register";
 
@@ -18,7 +18,7 @@ export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyE
     return ResponseService.errorResponse(error);
   }
 };
-
+/*
 export const createUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
@@ -76,3 +76,4 @@ export const deleteUser: APIGatewayProxyHandler = async (event: APIGatewayProxyE
     return ResponseService.errorResponse(error);
   }
 };
+*/
