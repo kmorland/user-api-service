@@ -2,7 +2,6 @@
 import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
-// import { getUser, listUsers } from "../handler";
 import { getUser, listUsers } from "../handler";
 
 import createEvent from "aws-event-mocks";
