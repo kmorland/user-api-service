@@ -22,7 +22,7 @@ describe("User API Tests", () => {
         });
     });
 
-    test("listUsers should return HTTP Status 200", async () => {
+    test("listUsers should return HTTP Status 200 on success", async () => {
         const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
             template: "aws:apiGateway",
         });
@@ -40,7 +40,7 @@ describe("User API Tests", () => {
         expect(JSON.parse(response.body)).toHaveLength(1);
     });
 
-    test("listUsers should return HTTP status 400", async () => {
+    test("listUsers should return HTTP status 400 on error", async () => {
 
         AWS.remock("DynamoDB.DocumentClient", "scan", (_params, callback) => {
             callback(new Error("Test failure for mock"), null);
