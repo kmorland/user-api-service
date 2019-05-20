@@ -14,7 +14,7 @@ export class ResponseService {
         return {
             statusCode: STATUS.OK,
             headers: HEADERS,
-            body: JSON.stringify(data),
+            body: (data) ? JSON.stringify(data) : null,
         };
     }
 

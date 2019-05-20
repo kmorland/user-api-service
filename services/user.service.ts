@@ -126,7 +126,6 @@ export class UserService {
      * @returns {Promise<DocumentClient.DeleteItemOutput>}
      * @author Kevin Morland
      */
-    /*
     public async deleteUser(pEmail: string): Promise<DocumentClient.DeleteItemOutput> {
         const params: DocumentClient.DeleteItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -142,10 +141,10 @@ export class UserService {
         try {
             return this.client().delete(params).promise();
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
-    */
+
     private client = () => (this.createdClient || this.createClient());
     private createClient = () => {
         this.createdClient = new DocumentClient({ region: "us-east-1" });
