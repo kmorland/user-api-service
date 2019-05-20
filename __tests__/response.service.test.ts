@@ -4,17 +4,12 @@ jest.setTimeout(240000);
 
 describe("response.service Tests", () => {
     test("successResponse should return statusCode 200", async () => {
-        const { statusCode }: any = ResponseService.successResponse();
+        const { statusCode }: any = ResponseService.successResponse("Success Response");
         expect(statusCode).toBe(STATUS.OK);
     });
 
     test("errorResponse should return statusCode 400", async () => {
-        const { statusCode }: any = ResponseService.errorResponse();
-        expect(statusCode).toBe(STATUS.ERROR);
-    });
-
-    test("errorResponse error thrown should return statusCode 400", async () => {
-        const { statusCode }: any = ResponseService.errorResponse(new Error("Invalid Response"));
+        const { statusCode }: any = ResponseService.errorResponse("Invalid Response");
         expect(statusCode).toBe(STATUS.ERROR);
     });
 

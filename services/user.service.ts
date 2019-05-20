@@ -114,7 +114,7 @@ export class UserService {
             await this.client().update(params).promise();
             return await this.getUser(pEmail);
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
     */
