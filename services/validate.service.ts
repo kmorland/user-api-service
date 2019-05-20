@@ -1,6 +1,5 @@
-import { STATUS } from "./response.service";
-
 import * as Joi from "@hapi/joi";
+import { STATUS } from "./response.service";
 
 export class ValidateService {
 
@@ -9,7 +8,7 @@ export class ValidateService {
         if (error) { throw { errorCode: STATUS.ERROR, message: "Email address required, invalid email address" }; }
         return true;
     }
-    /*
+
     public static isValidUser(userData: any) {
         const schema = Joi.object().keys({
             email: Joi.string().email().required(),
@@ -23,7 +22,7 @@ export class ValidateService {
                 last: Joi.string().required(),
             }),
             dob: Joi.object().keys({
-                date: Joi.string.date().required(),
+                date: Joi.date().required(),
                 age: Joi.number(),
             }),
             location: {
@@ -46,16 +45,14 @@ export class ValidateService {
                 medium: Joi.string(),
             },
             registered: {
-                date: Joi.string(),
+                date: Joi.date(),
                 age: Joi.number(),
             },
-        });
+        }).unknown();
         const { error } = Joi.validate(userData, schema);
-        console.log("error", error);
         if (error) {
-           throw { errorCode: STATUS.ERROR, message: error.details.message };
+           throw { errorCode: STATUS.ERROR, message: error.details[0].message };
         }
         return true;
     }
-    */
 }

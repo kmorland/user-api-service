@@ -1,0 +1,40 @@
+{
+    "gender": "male",
+    "email": "kmorland@yahoocom",
+    "name": {
+        "title": "Mr",
+        "last": "Morland"
+    },
+    "dob": {
+        "date": "1986-11-07T03:31:19Z",
+        "age": 32
+    },
+    "phone": "(677)-960-9523",
+    "cell": "(581)-968-9009",
+    "nat": "US",
+    "location": {
+        "street": "4167 adams st",
+        "city": "bakersfield",
+        "state": "wisconsin",
+        "postcode": 86564,
+        "coordinates": {
+            "latitude": "-80.8875",
+            "longitude": "21.1104"
+        },
+        "timezone": {
+            "offset": "-11:00",
+            "description": "Midway Island, Samoa"
+        }
+    },
+    "picture": {
+        "large": "https://randomuser.me/api/portraits/women/24.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/24.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/24.jpg"
+    },
+    "creationDate": "2019-05-16T19:23:50.931Z",
+    "updatedDate": null,
+    "registered": {
+        "date": "2009-08-20T23:11:39Z",
+        "age": 9
+    }
+}

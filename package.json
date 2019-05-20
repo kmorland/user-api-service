@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "listUsers": "sls invoke local -f list-users --aws-profile kevinmorland.com",
-    "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com"
+    "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com",
+    "createUser": "sls invoke local -f create-user --path=data/create-user-body.json --aws-profile kevinmorland.com"
   },
   "dependencies": {
     "@hapi/joi": "^15.0.3",

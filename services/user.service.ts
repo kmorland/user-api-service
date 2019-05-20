@@ -27,7 +27,6 @@ export class UserService {
      * @returns {Promise<GetItemOutput>} created user
      * @author Kevin Morland
      */
-    /*
     public async createUser(user: any): Promise<DocumentClient.GetItemOutput> {
         user.creationDate = new Date().toJSON();
         const params: DocumentClient.PutItemInput = {
@@ -51,7 +50,7 @@ export class UserService {
             throw new Error(error);
         }
     }
-    */
+
     /**
      *  Returns the user by the key, which is the email field
      *  @returns {Promise<GetItemOutput>} user by email address

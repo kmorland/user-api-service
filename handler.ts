@@ -18,18 +18,19 @@ export const listUsers: APIGatewayProxyHandler = async (_event: APIGatewayProxyE
     return ResponseService.errorResponse(error);
   }
 };
-/*
+
 export const createUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
   try {
+    ValidateService.isValidUser(JSON.parse(event.body));
     const { Item } = await userService.createUser(JSON.parse(event.body));
 
-    return ResponseService.successResponse(Item);
+    return ResponseService.successResponse( Item );
   } catch (error) {
     return ResponseService.errorResponse(error);
   }
-};*/
+};
 
 export const getUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
