@@ -7,6 +7,7 @@ import { getUser, listUsers } from "../handler";
 
 import createEvent from "aws-event-mocks";
 import { ResponseService } from "../services/response.service";
+import { UserService } from "../services/user.service";
 
 const getUserResponse = require("../data/get-user-response.json");
 
@@ -131,6 +132,22 @@ describe("User API Tests", () => {
 
         const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
         expect(JSON.parse(response.statusCode)).toBe(400);
+    });
+
+    test("getUser not found, returns errorCode 404", async () => {
+
+        AWS.remock("DynamoDB.DocumentClient", "get", (_params, callback) => {
+            callback(null, null);
+        });
+
+        const userService: UserService = new UserService();
+        try {
+            await userService.getUser("kmorland123@yahoo.com");
+            // Fail test if above expression doesn't throw anything.
+            expect(true).toBe(false);
+        } catch (e) {
+            expect(e.errorCode).toBe(404);
+        }
     });
 
     afterAll(() => {
