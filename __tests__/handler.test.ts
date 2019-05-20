@@ -6,6 +6,7 @@ import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 import { listUsers } from "../handler";
 
 import createEvent from "aws-event-mocks";
+import { ResponseService } from "../services/response.service";
 
 const getUserResponse = require("../data/get-user-response.json");
 
@@ -51,6 +52,20 @@ describe("User API Tests", () => {
 
         const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
         expect(JSON.parse(response.statusCode)).toBe(400);
+    });
+
+    test("response service body should match passed event body", async () => {
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+        });
+
+        const response: any = ResponseService.successResponse( apiGatewayEvent );
+        expect(JSON.parse(response.body)).toEqual(apiGatewayEvent);
+    });
+
+    test("response service body should be null", async () => {
+        const response: any = ResponseService.successResponse( );
+        expect(JSON.parse(response.body)).toEqual(null);
     });
     /*
     test("getUser should return 400, invalid email address", async () => {
