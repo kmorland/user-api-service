@@ -20,7 +20,7 @@ export class ResponseService {
 
     public static errorResponse(error?: any) {
         return {
-            statusCode: (error) ? error.errorCode : STATUS.ERROR || STATUS.ERROR,
+            statusCode: (error && error.errorCode) ? error.errorCode : STATUS.ERROR || STATUS.ERROR,
             headers: HEADERS,
             body: JSON.stringify(error),
         };
