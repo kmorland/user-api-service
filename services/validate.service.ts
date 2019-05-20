@@ -7,7 +7,7 @@ export class ValidateService {
         if (error) { throw { errorCode: 400, message: "Email address required, invalid email address" }; }
         return true;
     }
-
+    /*
     public static isValidUser(userData: any) {
         const schema = Joi.object().keys({
             email: Joi.string().email().required(),
@@ -55,5 +55,5 @@ export class ValidateService {
         }
         return true;
     }
-
+    */
 }

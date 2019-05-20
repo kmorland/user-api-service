@@ -9,7 +9,7 @@ export class ResponseService {
         return {
             statusCode: 200,
             headers: this.HEADERS,
-            body: (data) ? JSON.stringify(data) : null,
+            body: JSON.stringify(data),
         };
     }
 
@@ -17,7 +17,7 @@ export class ResponseService {
         return {
             statusCode: error.errorCode || 400,
             headers: this.HEADERS,
-            body: JSON.stringify({ error: error.message }),
+            body: JSON.stringify(error),
         };
     }
 

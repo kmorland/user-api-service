@@ -34,10 +34,6 @@ export const createUser: APIGatewayProxyHandler = async (event: APIGatewayProxyE
 export const getUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  /*if ( !ValidateService.isValidEmail(event.pathParameters.email) ) {
-    return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
-  }*/
-
   try {
     ValidateService.isValidEmail(event.pathParameters.email);
     const { Item } = await userService.getUser(event.pathParameters.email);
