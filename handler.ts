@@ -45,22 +45,19 @@ export const getUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   }
 };
 
-/*
 export const updateUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  if ( !ValidateService.isValidEmail(event.pathParameters.email) ) {
-    return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
-  }
-
   try {
+    ValidateService.isValidEmail(event.pathParameters.email);
+    ValidateService.isValidUser(JSON.parse(event.body));
+
     const { Item } = await userService.updateUser(event.pathParameters.email, JSON.parse(event.body));
     return ResponseService.successResponse(Item);
   } catch (error) {
     return ResponseService.errorResponse(error);
   }
 };
-*/
 
 export const deleteUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;

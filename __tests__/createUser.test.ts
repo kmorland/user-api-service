@@ -79,22 +79,6 @@ describe("createUser Tests", () => {
         expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
     });
 
-    // test("getUser should return 400 on invalid email address", async () => {
-    //     apiGatewayEvent.pathParameters.email = "kmorland@yahoocom";
-    //     const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-    //     expect(response.statusCode).toBe(STATUS.ERROR);
-    // });
-
-    // test("getUser should return 404 on unknown email address", async () => {
-    //     apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
-    //     AWS.remock("DynamoDB.DocumentClient", "get", (_params: any, callback: Callback) => {
-    //         callback(null, { statusCode: STATUS.NOT_FOUND } );
-    //     });
-
-    //     const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-    //     expect(response.statusCode).toBe(STATUS.NOT_FOUND);
-    // });
-
     afterAll(() => {
         AWS.restore("DynamoDB.DocumentClient");
     });

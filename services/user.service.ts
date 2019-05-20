@@ -76,11 +76,10 @@ export class UserService {
      * Updates the user, from the PUT body
      * @param {string} pEmail
      * @param {string} pUser
-     * @returns  {Promise<DocumentClient.GetItemOutput>} Returns the updated user
+     * @returns  {Promise<any>} Returns the updated user
      * @author Kevin Morland
      */
-    /*
-    public async updateUser(pEmail: string, pUser: any): Promise<DocumentClient.GetItemOutput> {
+    public async updateUser(pEmail: string, pUser: any): Promise<any> {
         const params: DocumentClient.UpdateItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
             Key: { email: pEmail },
@@ -99,8 +98,7 @@ export class UserService {
                 ":name": pUser.name,
                 ":dob": pUser.dob,
                 ":location": pUser.location,
-                ":updatedDate": new Date().toJSON(),
-                ":email" : pEmail,
+                ":timestamp": pUser.timestamp.updatedAt = new Date().toJSON(),
             },
             ExpressionAttributeNames: {
                 "#name": "name",
@@ -112,12 +110,14 @@ export class UserService {
 
         try {
             await this.client().update(params).promise();
-            return await this.getUser(pEmail);
+            console.log("user", pUser);
+            return { Item: pUser };
         } catch (error) {
+            console.log("Error", error);
             throw error;
         }
     }
-    */
+
     /**
      * Deletes the user from the dynamodb table, by key
      * @param {string} pEmail
