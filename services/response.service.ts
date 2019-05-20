@@ -18,11 +18,11 @@ export class ResponseService {
         };
     }
 
-    public static errorResponse(error?: any) {
+    public static errorResponse(error: any) {
         return {
             statusCode: error.errorCode || STATUS.ERROR,
             headers: HEADERS,
-            body: (error) ? JSON.stringify(error) : null,
+            body: JSON.stringify(error),
         };
     }
 
