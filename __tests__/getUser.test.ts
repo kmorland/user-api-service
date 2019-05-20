@@ -3,6 +3,7 @@ import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 import { getUser } from "../handler";
+import { STATUS } from "../services/response.service";
 
 import createEvent from "aws-event-mocks";
 
@@ -35,7 +36,7 @@ describe("getUser Tests", () => {
 
     test("getUser should return HTTP status 200 on success", async () => {
         const { statusCode }: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(JSON.parse(statusCode)).toBe(200);
+        expect(JSON.parse(statusCode)).toBe(STATUS.OK);
     });
 
     test("getUser should return HTTP status 400 on error", async () => {
@@ -44,23 +45,23 @@ describe("getUser Tests", () => {
         });
 
         const { statusCode }: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(JSON.parse(statusCode)).toBe(400);
+        expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
     });
 
     test("getUser should return 400 on invalid email address", async () => {
         apiGatewayEvent.pathParameters.email = "kmorland@yahoocom";
         const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(response.statusCode).toBe(400);
+        expect(response.statusCode).toBe(STATUS.ERROR);
     });
 
     test("getUser should return 404 on unknown email address", async () => {
         apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
         AWS.remock("DynamoDB.DocumentClient", "get", (_params: any, callback: Callback) => {
-            callback(null, { statusCode: 404 } );
+            callback(null, { statusCode: STATUS.NOT_FOUND } );
         });
 
         const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).toBe(STATUS.NOT_FOUND);
     });
 
     afterAll(() => {

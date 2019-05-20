@@ -1,4 +1,5 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { STATUS } from "./response.service";
 
 export class UserService {
 
@@ -65,7 +66,7 @@ export class UserService {
         try {
             const data: DocumentClient.GetItemOutput = await this.client().get(params).promise();
             if (!data || !data.Item) {
-                throw { message: `User was not found with given email address ${pEmail}`, errorCode: 404 };
+                throw { message: `User was not found with given email address ${pEmail}`, errorCode: STATUS.NOT_FOUND };
             }
             return data;
         } catch (error) {

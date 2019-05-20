@@ -1,10 +1,12 @@
+import { STATUS } from "./response.service";
+
 import * as Joi from "@hapi/joi";
 
 export class ValidateService {
 
     public static isValidEmail(email: string): boolean {
         const {error} = Joi.validate(email, Joi.string().email().required());
-        if (error) { throw { errorCode: 400, message: "Email address required, invalid email address" }; }
+        if (error) { throw { errorCode: STATUS.ERROR, message: "Email address required, invalid email address" }; }
         return true;
     }
     /*
@@ -51,7 +53,7 @@ export class ValidateService {
         const { error } = Joi.validate(userData, schema);
         console.log("error", error);
         if (error) {
-           throw { errorCode: 400, message: error.details.message };
+           throw { errorCode: STATUS.ERROR, message: error.details.message };
         }
         return true;
     }

@@ -3,6 +3,7 @@ import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 import { listUsers } from "../handler";
+import { STATUS } from "../services/response.service";
 
 import createEvent from "aws-event-mocks";
 
@@ -28,7 +29,7 @@ describe("listUser Tests", () => {
 
     test("listUsers should return HTTP Status 200 on success", async () => {
         const { statusCode }: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
-        expect(JSON.parse(statusCode)).toBe(200);
+        expect(JSON.parse(statusCode)).toBe(STATUS.OK);
     });
 
     test("listUsers should return HTTP status 400 on error", async () => {
@@ -37,7 +38,7 @@ describe("listUser Tests", () => {
         });
 
         const { statusCode }: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
-        expect(JSON.parse(statusCode)).toBe(400);
+        expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
     });
 
     afterAll(() => {
