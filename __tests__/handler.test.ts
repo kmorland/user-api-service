@@ -3,7 +3,7 @@ import * as AWS from "aws-sdk-mock";
 
 import { APIGatewayProxyEvent, Callback, Context } from "aws-lambda";
 // import { getUser, listUsers } from "../handler";
-import { listUsers } from "../handler";
+import { listUsers, getUser } from "../handler";
 
 import createEvent from "aws-event-mocks";
 import { ResponseService } from "../services/response.service";
@@ -67,7 +67,26 @@ describe("User API Tests", () => {
         const response: any = ResponseService.successResponse( );
         expect(JSON.parse(response.body)).toEqual(null);
     });
-    /*
+
+    test("getUser should return HTTP status 200", async () => {
+
+        AWS.mock("DynamoDB.DocumentClient", "get", (_params, callback) => {
+            callback(null, { Item: [ getUserResponse ] });
+        });
+
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+            merge: {
+                pathParameters: {
+                    email: "kmorland@yahoo.com",
+                },
+            },
+        });
+
+        const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
+        expect(JSON.parse(response.statusCode)).toBe(200);
+    });
+
     test("getUser should return 400, invalid email address", async () => {
         const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
             template: "aws:apiGateway",
@@ -80,7 +99,7 @@ describe("User API Tests", () => {
         const response: any = await getUser(apiGatewayEvent, mockContext, mockCallback);
         expect(response.statusCode).toBe(400);
     });
-
+    /*
     test("getUser body should return 'Email address required, invalid email address'", async () => {
         const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
             template: "aws:apiGateway",

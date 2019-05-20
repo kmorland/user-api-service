@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callback, Context } from "aws-lambda";
 import { ResponseService } from "./services/response.service";
 import { UserService } from "./services/user.service";
-// import { ValidateService } from "./services/validate.service";
+import { ValidateService } from "./services/validate.service";
 
 import "source-map-support/register";
 
@@ -29,16 +29,17 @@ export const createUser: APIGatewayProxyHandler = async (event: APIGatewayProxyE
   } catch (error) {
     return ResponseService.errorResponse(error);
   }
-};
+};*/
 
 export const getUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 
-  if ( !ValidateService.isValidEmail(event.pathParameters.email) ) {
+  /*if ( !ValidateService.isValidEmail(event.pathParameters.email) ) {
     return ResponseService.errorResponse( new Error("Email address required, invalid email address") );
-  }
+  }*/
 
   try {
+    ValidateService.isValidEmail(event.pathParameters.email);
     const { Item } = await userService.getUser(event.pathParameters.email);
 
     return ResponseService.successResponse(Item);
@@ -47,6 +48,7 @@ export const getUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   }
 };
 
+/*
 export const updateUser: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent, _context: Context, _callback: Callback<APIGatewayProxyResult>) => {
   _context.callbackWaitsForEmptyEventLoop = false;
 

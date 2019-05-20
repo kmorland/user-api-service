@@ -56,7 +56,6 @@ export class UserService {
      *  @returns {Promise<GetItemOutput>} user by email address
      *  @author Kevin Morland
      */
-    /*
     public async getUser(pEmail: string): Promise<DocumentClient.GetItemOutput> {
         const params: DocumentClient.GetItemInput = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -73,7 +72,6 @@ export class UserService {
             throw error;
         }
     }
-    */
 
     /**
      * Updates the user, from the PUT body
