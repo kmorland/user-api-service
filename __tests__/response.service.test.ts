@@ -9,7 +9,7 @@ describe("response.service Tests", () => {
     });
 
     test("errorResponse should return statusCode 400", async () => {
-        const { statusCode }: any = ResponseService.errorResponse({});
+        const { statusCode }: any = ResponseService.errorResponse();
         expect(statusCode).toBe(STATUS.ERROR);
     });
 });
