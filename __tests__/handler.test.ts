@@ -153,4 +153,4 @@ describe("User API Tests", () => {
     afterAll(() => {
         AWS.restore("DynamoDB.DocumentClient");
     });
-})
+});
