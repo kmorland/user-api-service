@@ -47,7 +47,7 @@ export class UserService {
             await this.client().put(params).promise();
             return await this.getUser(user.email);
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -115,7 +115,7 @@ export class UserService {
             await this.client().update(params).promise();
             return await this.getUser(pEmail);
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
     */

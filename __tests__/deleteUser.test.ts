@@ -48,13 +48,16 @@ describe("deleteUser Tests", () => {
         expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
     });
 
-    test("deleteUser invalid email address, should return HTTP status 400 on error", async () => {
-        apiGatewayEvent.pathParameters.email = "unknown@yahoocom";
+    test("deleteUser should return HTTP status 400 on invalid email address", async () => {
+        AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
+            callback(new Error("Invalid parameters"), null);
+        });
+
         const response: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
         expect(response.statusCode).toBe(STATUS.ERROR);
     });
 
-    test("deleteUser unknown email address, ConditionalError thrown by DynamoDB", async () => {
+    test("deleteUser should return HTTP status 400 on unknown email address", async () => {
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
             callback(new Error("ConditionalError thrown by DynamoDB"), null);
         });
