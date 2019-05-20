@@ -23,8 +23,36 @@ export class ValidateService {
                 date: Joi.string.date().required(),
                 age: Joi.number(),
             }),
+            location: {
+                street: Joi.string().required(),
+                city: Joi.string().required(),
+                state: Joi.string().required(),
+                postcode: Joi.number().required(),
+                coordinates: {
+                    latitude: Joi.string(),
+                    longitude: Joi.string(),
+                },
+                timezone: {
+                    offset: Joi.string(),
+                    description: Joi.string(),
+                },
+            },
+            picture: {
+                large: Joi.string(),
+                thumbnail: Joi.string(),
+                medium: Joi.string(),
+            },
+            registered: {
+                date: Joi.string(),
+                age: Joi.number(),
+            },
         });
-        Joi.validate(userData, schema);
+        const { error } = Joi.validate(userData, schema);
+        console.log("error", error);
+        if (error) {
+           throw { errorCode: 400, message: error.details.message };
+        }
+        return true;
     }
 
 }

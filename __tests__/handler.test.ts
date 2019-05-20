@@ -38,6 +38,20 @@ describe("User API Tests", () => {
         const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
         expect(JSON.parse(response.body)).toHaveLength(1);
     });
+
+    test("listUsers should return HTTP status 400", async () => {
+
+        AWS.remock("DynamoDB.DocumentClient", "scan", (_params, callback) => {
+            callback(new Error("Test failure for mock"), null);
+        });
+
+        const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
+            template: "aws:apiGateway",
+        });
+
+        const response: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);
+        expect(JSON.parse(response.statusCode)).toBe(400);
+    });
     /*
     test("getUser should return 400, invalid email address", async () => {
         const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
