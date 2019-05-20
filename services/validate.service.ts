@@ -44,11 +44,11 @@ export class ValidateService {
                 thumbnail: Joi.string(),
                 medium: Joi.string(),
             },
-            registered: {
-                date: Joi.date(),
-                age: Joi.number(),
+            timestamp: {
+                createdAt: Joi.date().optional(),
+                updatedAt: Joi.date().optional(),
             },
-        }).unknown();
+        });
         const { error } = Joi.validate(userData, schema);
         if (error) {
            throw { errorCode: STATUS.ERROR, message: error.details.map((d: any) => {

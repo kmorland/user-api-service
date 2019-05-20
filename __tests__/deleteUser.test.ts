@@ -6,6 +6,7 @@ import { deleteUser } from "../handler";
 import { STATUS } from "../services/response.service";
 
 import createEvent from "aws-event-mocks";
+import { ConditionalCheckFailedException } from "../exceptions/conditional-check-failed-exception";
 
 const getUserResponse = require("../data/get-user-response.json");
 
@@ -55,11 +56,12 @@ describe("deleteUser Tests", () => {
     });
 
     test("deleteUser unknown email address, ConditionalError thrown by DynamoDB", async () => {
+        apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
+
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
-            callback(new Error("ConditionalError thrown by DynamoDB"), null);
+            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User does not exist with email address ${apiGatewayEvent.pathParameters.email}`), null);
         });
 
-        apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
         const response: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
         expect(response.statusCode).toBe(STATUS.ERROR);
     });

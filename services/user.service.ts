@@ -24,30 +24,29 @@ export class UserService {
     /**
      * Creates user, from post request
      * @param {any} user
-     * @returns {Promise<GetItemOutput>} created user
+     * @returns {Promise<any>} created user
      * @author Kevin Morland
      */
-    public async createUser(user: any): Promise<DocumentClient.GetItemOutput> {
-        user.creationDate = new Date().toJSON();
-        const params: DocumentClient.PutItemInput = {
-            TableName: process.env.DYNAMODB_TABLE,
-            Item: user,
-        };
-
+    public async createUser(user: any): Promise<any> {
         try {
-            const userCheckParams: DocumentClient.GetItemInput = {
-                TableName: process.env.DYNAMODB_TABLE,
-                Key: { email: user.email },
+            user.timestamp = {
+                createdAt: new Date().toJSON(),
+                updatedAt: null,
             };
-            const userCheck: DocumentClient.GetItemOutput = await this.client().get(userCheckParams).promise();
-            if (userCheck && userCheck.Item) {
-                throw new Error(`User already exists, with email ${user.email}`);
-            }
+            const params: DocumentClient.PutItemInput = {
+                TableName: process.env.DYNAMODB_TABLE,
+                Item: user,
+                ConditionExpression: `attribute_not_exists(email)`,
+                ReturnValues: "ALL_OLD",
+            };
 
             await this.client().put(params).promise();
-            return await this.getUser(user.email);
+            return { Item: user };
         } catch (error) {
-            throw new Error(error);
+            if ( error && error.code === "ConditionalCheckFailedException" ) {
+                throw { errorCode: STATUS.ERROR, message: `User already exist with email address ${user.email}` };
+            }
+            throw error;
         }
     }
 
@@ -140,6 +139,9 @@ export class UserService {
         try {
             return this.client().delete(params).promise();
         } catch (error) {
+            if ( error && error.code === "ConditionalCheckFailedException" ) {
+                throw { errorCode: STATUS.ERROR, message: `User does not exist with email address ${pEmail}` };
+            }
             throw error;
         }
     }
