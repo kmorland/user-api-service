@@ -51,7 +51,9 @@ export class ValidateService {
         }).unknown();
         const { error } = Joi.validate(userData, schema);
         if (error) {
-           throw { errorCode: STATUS.ERROR, message: error.details[0].message };
+           throw { errorCode: STATUS.ERROR, message: error.details.map((d: any) => {
+               return d.message;
+           }) };
         }
         return true;
     }
