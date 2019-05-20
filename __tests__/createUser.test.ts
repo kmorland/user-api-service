@@ -23,16 +23,20 @@ jest.setTimeout(240000);
 
 describe("createUser Tests", () => {
     beforeAll(() => {
-        AWS.mock("DynamoDB.DocumentClient", "get", (_params: any, callback: Callback) => {
-            callback(null, null);
-        });
-
         AWS.mock("DynamoDB.DocumentClient", "put", (_params: any, callback: Callback) => {
-            callback(null, { Item: createUserBody });
+            callback(null, null);
         });
     });
 
     test("createUser should return HTTP status 200", async () => {
+        // Mock the first get call
+        AWS.mock("DynamoDB.DocumentClient", "get", (_params: any, callback: Callback) => {
+            callback(null, null);
+        });
+        // Mock the second get call, return data this time
+        AWS.remock("DynamoDB.DocumentClient", "get", (_params: any, callback: Callback) => {
+            callback(null, { Item: createUserBody });
+        });
         const { statusCode }: any = await createUser(apiGatewayEvent, mockContext, mockCallback);
         expect(statusCode).toBe(200);
     });
