@@ -29,7 +29,7 @@ jest.setTimeout(240000);
 describe("updateUser Tests", () => {
     beforeAll(() => {
         AWS.mock("DynamoDB.DocumentClient", "update", (_params: any, callback: Callback) => {
-            callback(null, { Item: updateUserBody });
+            callback(null, { Attributes: updateUserBody });
         });
     });
 
@@ -40,7 +40,6 @@ describe("updateUser Tests", () => {
 
     test("updateUser should return updated user", async () => {
         const { body }: any = await updateUser(apiGatewayEvent, mockContext, mockCallback);
-        console.log("body", body);
         const user: any = JSON.parse(body);
         expect(user).toHaveProperty("gender");
         expect(user).toHaveProperty("email");
@@ -74,13 +73,28 @@ describe("updateUser Tests", () => {
         expect(JSON.parse(body).message).toHaveLength(1);
     });
 
-    test("updateUser user already exist HTTP status 400 on error", async () => {
-        AWS.remock("DynamoDB.DocumentClient", "update", (_params: any, callback: Callback) => {
-            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User already exist with email address ${existingUser.email}`), null);
-        });
+    test("updateUser user not found HTTP status 404 on error", async () => {
+        apiGatewayEvent.pathParameters.email = "unknownuser@gmail.com";
         apiGatewayEvent.body = JSON.stringify(existingUser);
+
+        AWS.remock("DynamoDB.DocumentClient", "update", (_params: any, callback: Callback) => {
+            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User does not exist with email address ${apiGatewayEvent.pathParameters.email}, user not found`), null);
+        });
+
         const { statusCode }: any = await updateUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
+        expect(JSON.parse(statusCode)).toBe(STATUS.NOT_FOUND);
+    });
+
+    test("updateUser user not found check error message", async () => {
+        apiGatewayEvent.pathParameters.email = "unknownuser@gmail.com";
+        apiGatewayEvent.body = JSON.stringify(existingUser);
+
+        AWS.remock("DynamoDB.DocumentClient", "update", (_params: any, callback: Callback) => {
+            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User does not exist with email address ${apiGatewayEvent.pathParameters.email}, user not found`), null);
+        });
+
+        const { body }: any = await updateUser(apiGatewayEvent, mockContext, mockCallback);
+        expect(JSON.parse(body).message).toBe(`User does not exist with email address ${apiGatewayEvent.pathParameters.email}, user not found`);
     });
 
     afterAll(() => {

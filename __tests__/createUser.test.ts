@@ -79,6 +79,15 @@ describe("createUser Tests", () => {
         expect(JSON.parse(statusCode)).toBe(STATUS.ERROR);
     });
 
+    test("createUser user already exist check error message", async () => {
+        AWS.remock("DynamoDB.DocumentClient", "put", (_params: any, callback: Callback) => {
+            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User already exist with email address ${existingUser.email}`), null);
+        });
+        apiGatewayEvent.body = JSON.stringify(existingUser);
+        const { body }: any = await createUser(apiGatewayEvent, mockContext, mockCallback);
+        expect(JSON.parse(body).message).toBe(`User already exist with email address ${existingUser.email}`);
+    });
+
     afterAll(() => {
         AWS.restore("DynamoDB.DocumentClient");
     });

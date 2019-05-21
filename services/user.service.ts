@@ -111,6 +111,9 @@ export class UserService {
             };
             return await this.client().update(params).promise();
         } catch (error) {
+            if ( error && error.code === "ConditionalCheckFailedException" ) {
+                throw { errorCode: STATUS.NOT_FOUND, message: `User does not exist with email address ${pEmail}, user not found` };
+            }
             throw error;
         }
     }
