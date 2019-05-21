@@ -5,27 +5,32 @@ export class UserService {
 
     private createdClient: DocumentClient;
 
-    constructor() {
-        //
-    }
+// tslint:disable-next-line: no-empty
+    constructor() {}
 
     /**
-     * List of users, queries DynamoDB
-     * @returns {Promise<ScanOutput>} array of users
+     * List of users, queries DynamoDB.  No limit set, just returns all records
+     * @returns {Promise<DocumentClient.ScanOutput>} array of users
      * @author Kevin Morland
+     * @public
      */
     public async listUsers(): Promise<DocumentClient.ScanOutput> {
-        const params: DocumentClient.ScanInput = {
-            TableName: process.env.DYNAMODB_TABLE,
-        };
-        return await this.client().scan(params).promise();
+        try {
+            const params: DocumentClient.ScanInput = {
+                TableName: process.env.DYNAMODB_TABLE,
+            };
+            return await this.client().scan(params).promise();
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
-     * Creates user, from post request
-     * @param {any} user
+     * Creates user, from post request.  Fails if user exists
+     * @param {any} user User object, from lambda handler
      * @returns {Promise<any>} created user
      * @author Kevin Morland
+     * @public
      */
     public async createUser(user: any): Promise<any> {
         try {
@@ -51,9 +56,11 @@ export class UserService {
     }
 
     /**
-     *  Returns the user by the key, which is the email field
-     *  @returns {Promise<GetItemOutput>} user by email address
-     *  @author Kevin Morland
+     *  Returns the user by the key, which is the email field.
+     * @param {string} pEmail Email address
+     * @returns {Promise<DocumentClient.GetItemOutput>} user by email address
+     * @author Kevin Morland
+     * @public
      */
     public async getUser(pEmail: string): Promise<DocumentClient.GetItemOutput> {
         try {
