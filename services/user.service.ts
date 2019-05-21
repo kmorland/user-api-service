@@ -140,7 +140,7 @@ export class UserService {
             return this.client().delete(params).promise();
         } catch (error) {
             if ( error && error.code === "ConditionalCheckFailedException" ) {
-                throw { errorCode: STATUS.ERROR, message: `User does not exist with email address ${pEmail}` };
+                throw { errorCode: STATUS.NOT_FOUND, message: `User does not exist with email address ${pEmail}` };
             }
             throw error;
         }

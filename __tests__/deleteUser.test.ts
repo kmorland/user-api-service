@@ -16,7 +16,7 @@ const apiGatewayEvent: APIGatewayProxyEvent = createEvent({
     template: "aws:apiGateway",
     merge: {
         pathParameters: {
-            email: "kmorland@yahoo.com",
+            email: "valid@email.com",
         },
     },
 });
@@ -51,14 +51,15 @@ describe("deleteUser Tests", () => {
 
     test("deleteUser should return HTTP status 400 on invalid email address", async () => {
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
-            callback("Invalid parameters", null);
+            callback(null, null);
         });
+        apiGatewayEvent.pathParameters.email = "notvalid@emailcom";
 
         const response: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
         expect(response.statusCode).toBe(STATUS.ERROR);
     });
 
-    test("deleteUser unknown email address, ConditionalError thrown by DynamoDB", async () => {
+    test("deleteUser unknown email address, HTTP status 404 on error", async () => {
         apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
 
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
@@ -66,7 +67,7 @@ describe("deleteUser Tests", () => {
         });
 
         const response: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
-        expect(response.statusCode).toBe(STATUS.ERROR);
+        expect(response.statusCode).toBe(STATUS.NOT_FOUND);
     });
 
     afterAll(() => {
