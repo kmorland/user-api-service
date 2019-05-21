@@ -70,6 +70,17 @@ describe("deleteUser Tests", () => {
         expect(response.statusCode).toBe(STATUS.NOT_FOUND);
     });
 
+    test("deleteUser unknown email address, check error message on error", async () => {
+        apiGatewayEvent.pathParameters.email = "unknown@yahoo.com";
+
+        AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
+            callback(new ConditionalCheckFailedException("ConditionalCheckFailedException", `User does not exist with email address ${apiGatewayEvent.pathParameters.email}`), null);
+        });
+
+        const { body }: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
+        expect(JSON.parse(body).message).toBe(`User does not exist with email address ${apiGatewayEvent.pathParameters.email}`);
+    });
+
     afterAll(() => {
         AWS.restore("DynamoDB.DocumentClient");
     });

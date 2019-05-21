@@ -125,19 +125,19 @@ export class UserService {
      * @author Kevin Morland
      */
     public async deleteUser(pEmail: string): Promise<DocumentClient.DeleteItemOutput> {
-        const params: DocumentClient.DeleteItemInput = {
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: {
-                email: pEmail,
-            },
-            ExpressionAttributeValues: {
-                ":email" : pEmail,
-            },
-            ConditionExpression: "email = :email",
-            ReturnValues: "NONE",
-        };
         try {
-            return this.client().delete(params).promise();
+            const params: DocumentClient.DeleteItemInput = {
+                TableName: process.env.DYNAMODB_TABLE,
+                Key: {
+                    email: pEmail,
+                },
+                ExpressionAttributeValues: {
+                    ":email" : pEmail,
+                },
+                ConditionExpression: "email = :email",
+                ReturnValues: "NONE",
+            };
+            return await this.client().delete(params).promise();
         } catch (error) {
             if ( error && error.code === "ConditionalCheckFailedException" ) {
                 throw { errorCode: STATUS.NOT_FOUND, message: `User does not exist with email address ${pEmail}` };
