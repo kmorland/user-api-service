@@ -34,7 +34,7 @@ describe("listUser Tests", () => {
 
     test("listUsers should return HTTP status 400 on error", async () => {
         AWS.remock("DynamoDB.DocumentClient", "scan", (_params: any, callback: Callback) => {
-            callback(new Error("Invalid parameters"), null);
+            callback("Invalid parameters", null);
         });
 
         const { statusCode }: any = await listUsers(apiGatewayEvent, mockContext, mockCallback);

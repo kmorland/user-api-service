@@ -42,7 +42,7 @@ describe("deleteUser Tests", () => {
 
     test("deleteUser should return HTTP status 400 on error", async () => {
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
-            callback(new Error("Invalid parameters"), null);
+            callback("Invalid parameters", null);
         });
 
         const { statusCode }: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
@@ -51,7 +51,7 @@ describe("deleteUser Tests", () => {
 
     test("deleteUser should return HTTP status 400 on invalid email address", async () => {
         AWS.remock("DynamoDB.DocumentClient", "delete", (_params: any, callback: Callback) => {
-            callback(new Error("Invalid parameters"), null);
+            callback("Invalid parameters", null);
         });
 
         const response: any = await deleteUser(apiGatewayEvent, mockContext, mockCallback);
