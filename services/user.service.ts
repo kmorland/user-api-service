@@ -1,4 +1,4 @@
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { DocumentClient, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
 import { STATUS } from "./response.service";
 
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
         try {
             user.timestamp = {
                 createdAt: new Date().toJSON(),
-                updatedAt: null,
+                updatedAt: new Date().toJSON(),
             };
             const params: DocumentClient.PutItemInput = {
                 TableName: process.env.DYNAMODB_TABLE,
@@ -56,12 +56,11 @@ export class UserService {
      *  @author Kevin Morland
      */
     public async getUser(pEmail: string): Promise<DocumentClient.GetItemOutput> {
-        const params: DocumentClient.GetItemInput = {
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: { email: pEmail },
-        };
-
         try {
+            const params: DocumentClient.GetItemInput = {
+                TableName: process.env.DYNAMODB_TABLE,
+                Key: { email: pEmail },
+            };
             const data: DocumentClient.GetItemOutput = await this.client().get(params).promise();
             if (!data || !data.Item) {
                 throw { message: `User was not found with given email address ${pEmail}`, errorCode: STATUS.NOT_FOUND };
@@ -76,44 +75,42 @@ export class UserService {
      * Updates the user, from the PUT body
      * @param {string} pEmail
      * @param {string} pUser
-     * @returns  {Promise<any>} Returns the updated user
+     * @returns {Promise<UpdateItemOutput>} Returns the updated user
      * @author Kevin Morland
      */
-    public async updateUser(pEmail: string, pUser: any): Promise<any> {
-        const params: DocumentClient.UpdateItemInput = {
-            TableName: process.env.DYNAMODB_TABLE,
-            Key: { email: pEmail },
-            UpdateExpression: `SET
-                gender = :gender,
-                cell = :cell,
-                phone = :phone,
-                #name = :name,
-                dob = :dob,
-                #location = :location,
-                updatedDate = :updatedDate`,
-            ExpressionAttributeValues: {
-                ":cell": pUser.cell,
-                ":gender": pUser.gender,
-                ":phone": pUser.phone,
-                ":name": pUser.name,
-                ":dob": pUser.dob,
-                ":location": pUser.location,
-                ":timestamp": pUser.timestamp.updatedAt = new Date().toJSON(),
-            },
-            ExpressionAttributeNames: {
-                "#name": "name",
-                "#location": "location",
-            },
-            ConditionExpression: "email = :email",
-            ReturnValues: "ALL_NEW",
-        };
-
+    public async updateUser(pEmail: string, user: any): Promise<UpdateItemOutput> {
         try {
-            await this.client().update(params).promise();
-            console.log("user", pUser);
-            return { Item: pUser };
+            const params: DocumentClient.UpdateItemInput = {
+                TableName: process.env.DYNAMODB_TABLE,
+                Key: { email: pEmail },
+                UpdateExpression: `SET
+                    gender = :gender,
+                    cell = :cell,
+                    phone = :phone,
+                    #name = :name,
+                    dob = :dob,
+                    #location = :location,
+                    #timestamp.updatedAt = :updatedAt`,
+                ExpressionAttributeValues: {
+                    ":cell": user.cell,
+                    ":email": user.email,
+                    ":gender": user.gender,
+                    ":phone": user.phone,
+                    ":name": user.name,
+                    ":dob": user.dob,
+                    ":location": user.location,
+                    ":updatedAt": new Date().toJSON(),
+                },
+                ExpressionAttributeNames: {
+                    "#name": "name",
+                    "#location": "location",
+                    "#timestamp": "timestamp",
+                },
+                ConditionExpression: "email = :email",
+                ReturnValues: "ALL_NEW",
+            };
+            return await this.client().update(params).promise();
         } catch (error) {
-            console.log("Error", error);
             throw error;
         }
     }

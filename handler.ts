@@ -52,8 +52,8 @@ export const updateUser: APIGatewayProxyHandler = async (event: APIGatewayProxyE
     ValidateService.isValidEmail(event.pathParameters.email);
     ValidateService.isValidUser(JSON.parse(event.body));
 
-    const { Item } = await userService.updateUser(event.pathParameters.email, JSON.parse(event.body));
-    return ResponseService.successResponse(Item);
+    const { Attributes } = await userService.updateUser(event.pathParameters.email, JSON.parse(event.body));
+    return ResponseService.successResponse(Attributes);
   } catch (error) {
     return ResponseService.errorResponse(error);
   }

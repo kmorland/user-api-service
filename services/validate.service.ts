@@ -25,35 +25,36 @@ export class ValidateService {
                 date: Joi.date().required(),
                 age: Joi.number(),
             }),
-            location: {
+            location: Joi.object().keys({
                 street: Joi.string().required(),
                 city: Joi.string().required(),
                 state: Joi.string().required(),
                 postcode: Joi.number().required(),
-                coordinates: {
+                coordinates: Joi.object().keys({
                     latitude: Joi.string(),
                     longitude: Joi.string(),
-                },
-                timezone: {
+                }),
+                timezone: Joi.object().keys({
                     offset: Joi.string(),
                     description: Joi.string(),
-                },
-            },
-            picture: {
+                }),
+            }),
+            picture: Joi.object().keys({
                 large: Joi.string(),
                 thumbnail: Joi.string(),
                 medium: Joi.string(),
-            },
-            timestamp: {
-                createdAt: Joi.date().optional(),
-                updatedAt: Joi.date().optional(),
-            },
+            }),
+            timestamp: Joi.object().keys({
+                createdAt: Joi.date().optional().allow(null),
+                updatedAt: Joi.date().optional().allow(null),
+            }).optional(),
         });
         const { error } = Joi.validate(userData, schema);
         if (error) {
-           throw { errorCode: STATUS.ERROR, message: error.details.map((d: any) => {
-               return d.message;
-           }) };
+            const errors: any[] = error.details.map((d: any) => {
+                return d.message;
+            });
+            throw { errorCode: STATUS.ERROR, message: errors };
         }
         return true;
     }
