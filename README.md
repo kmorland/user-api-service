@@ -1,18 +1,18 @@
-## create-serverless
+## Orange Theory Fitness -- User API Sample
 
-Reduce overhead, don't waste your time!
+Developed by Kevin Morland!
 
 ### Serverless API
   
-`create-serverless api --actions crud --endpoints users` 
+`serverless deploy -r us-east-1 --aws-profile profile_name -s dev` 
 
 Generates a serverless API with: 
   - POST `/users`, creates a user
   - GET `/users`, retrieves all users
-  - GET `/users/{id}`, retrieves a single user by id
-  - DELETE `/users/{id}`, delete a single user by id
-  - PUT `/users/{id}`, update a single user by id
-  - `package.json` with npm commands `create` and `deploy`
+  - GET `/users/{email}`, retrieves a single user by email
+  - DELETE `/users/{email}`, delete a single user by email
+  - PUT `/users/{email}`, update a single user by email
+  - `package.json` with npm commands `test`
 
 #### Want to add DynamoDB to your API?
 
