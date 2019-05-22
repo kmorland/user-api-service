@@ -33,7 +33,7 @@ custom:
         - name: User
           description: User Management
     models:
-      - name: CreateUserRequest
+      - name: UserRequest
         contentType: "application/json"
         schema: ${file(request_response_models/create_user_request_response_model.json)} # reference to your model's json schema file. You can also declare the model inline.
 functions:
@@ -57,11 +57,11 @@ functions:
             tags:
               - User
             requestModels:
-              "application/json": CreateUserRequest
+              "application/json": UserRequest
             methodResponses:
               - statusCode: 200
                 responseModels:
-                  "application/json" : CreateUserRequest
+                  "application/json" : UserRequest
               - statusCode: 400
   update-user:
     handler: handler.updateUser
@@ -79,12 +79,15 @@ functions:
             tags:
               - User
             requestModels:
-              "application/json": CreateUserRequest
+              "application/json": UserRequest
             methodResponses:
               - statusCode: 200
                 responseModels:
-                  "application/json" : CreateUserRequest
+                  "application/json" : UserRequest
               - statusCode: 400
+            pathParams:
+              - name: "email"
+                description: "Email address of the user to udpate"
   get-user:
     handler: handler.getUser
     events:
@@ -94,14 +97,17 @@ functions:
           cors: true
           documentation:
             summary: "Retrieve user"
-            description: "Retrieve existing user, by email address"
+            description: "Retrieve user, by email address"
             tags:
               - User
             methodResponses:
               - statusCode: 200
                 responseModels:
-                  "application/json" : CreateUserRequest
+                  "application/json" : UserRequest
               - statusCode: 400
+            pathParams:
+              - name: "email"
+                description: "Email address of the user to retreive"
   delete-user:
     handler: handler.deleteUser
     events:
@@ -114,6 +120,9 @@ functions:
             description: "Deletes user by email address, which is the key"
             tags:
               - User
+            pathParams:
+              - name: "email"
+                description: "Email address of the user to delete"
 resources:
   Resources:
     UserDynamoDbTable:
