@@ -13,11 +13,11 @@ Make sure you have latest version of serverless framework installed
 `serverless deploy -r us-east-1 --aws-profile profile_name -s dev` 
 
 Generates a serverless API with: 
-  - POST `/users`, creates a user
-  - GET `/users`, retrieves all users
-  - GET `/users/{email}`, retrieves a single user by email
-  - DELETE `/users/{email}`, delete a single user by email
-  - PUT `/users/{email}`, update a single user by email
+  - POST `/user`, creates a user
+  - GET `/user`, retrieves all users
+  - GET `/user/{email}`, retrieves a single user by email
+  - DELETE `/user/{email}`, delete a single user by email
+  - PUT `/user/{email}`, update a single user by email
   
 Generates API Gateway, Lambda, and DynamoDB
 
