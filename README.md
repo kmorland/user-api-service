@@ -1,6 +1,6 @@
 ## Orange Theory Fitness -- User API Sample
 
-Developed by Kevin Morland!
+Developed by Kevin Morland
 
 ### Serverless API Installation for AWS cloud environment
 `npm install`
