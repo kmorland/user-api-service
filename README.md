@@ -2,7 +2,13 @@
 
 Developed by Kevin Morland!
 
-### Serverless API
+### Serverless API Installation for AWS cloud environment
+`npm install`
+
+Make sure you have latest version of serverless framework installed
+`serverless -v` 1.42.3
+
+### Serverless API Deployment
   
 `serverless deploy -r us-east-1 --aws-profile profile_name -s dev` 
 
@@ -12,27 +18,18 @@ Generates a serverless API with:
   - GET `/users/{email}`, retrieves a single user by email
   - DELETE `/users/{email}`, delete a single user by email
   - PUT `/users/{email}`, update a single user by email
-  - `package.json` with npm commands `test`
-
-#### Want to add DynamoDB to your API?
-
-Just add `--dynamodb` to the api command and it will create a table with the endpoint name
-
-`create-serverless api --actions crud --endpoints users --dynamodb`  creates a DynamoDB table `users`
-
   
-### Payment (Stripe)  
+Generates API Gateway, Lambda, and DynamoDB
 
-`create-serverless payment --stripe` 
+#### Want to test the API?
+
+Test are written using JEST
+To execute test
+
+`npm run test`  Runs the test suites, which consist of 7 test suites and 33 test. 
   
-Generates a serverless payment micro service, ready for Stripe Checkout integration with: 
-- POST `/create-payment`, creates a Stripe charge
+### Documentation provided  
 
+Login into AWS console.  API Gateway -> Documentation -> Publish -> Swagger or Open API for Postman
 
-#### TODO: 
-- multiple endpoints
-- appending new endpoints to existing ones
-- AWS SNS integration, 
-- AWS Cognito integration
-- Generate API w/ API GW from Swagger file
-- Generate API w/ API GW from API Blueprint file
+Generates a file that can be imported into Swagger or Postman, depending what you choose.
