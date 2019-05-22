@@ -1,0 +1,11 @@
+{
+    "out": "./docs",
+    "exclude": "**/*+(index|.test).ts",
+    "mode": "modules",
+    "module": "es2015",
+    "target": "es5",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "includeDeclarations": true,
+    "excludeExternals": true
+}

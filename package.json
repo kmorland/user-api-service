@@ -5,6 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
+    "docs": "typedoc --options typedoc.json",
     "listUsers": "sls invoke local -f list-users --aws-profile kevinmorland.com",
     "getUser": "sls invoke local -f get-user --path=data/get-user.json --aws-profile kevinmorland.com",
     "createUser": "sls invoke local -f create-user --path=data/create-user-body.json --aws-profile kevinmorland.com"
@@ -27,6 +28,7 @@
     "serverless-webpack": "^5.2.0",
     "ts-jest": "^24.0.2",
     "ts-loader": "^5.3.3",
+    "typedoc": "^0.14.2",
     "typescript": "^3.2.4",
     "webpack": "^4.29.0"
   },
